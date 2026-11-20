@@ -21,3 +21,6 @@ cmake-build-*/
 # Qt generated files
 .qmlcache/
 .qmlls.ini
+
+
+CMakeUserPresets.json
