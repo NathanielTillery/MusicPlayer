@@ -1,0 +1,23 @@
+
+# CMake build output
+out/
+build/
+cmake-build-*/
+
+# Visual Studio files
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.suo
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+
+# Qt generated files
+.qmlcache/
+.qmlls.ini
