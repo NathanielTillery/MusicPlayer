@@ -12,7 +12,7 @@ AudioPlayer::AudioPlayer(QObject* parent)
     player->setAudioOutput(audioOutput);
 
     // Default volume: 50%
-    audioOutput->setVolume(0.5f);
+    // audioOutput->setVolume(0.5f);
 
     // Update QML whenever playback position changes.
     connect(player, &QMediaPlayer::positionChanged,
@@ -21,6 +21,9 @@ AudioPlayer::AudioPlayer(QObject* parent)
     // Update QML whenever track duration changes.
     connect(player, &QMediaPlayer::durationChanged,
         this, &AudioPlayer::durationChanged);
+
+    connect(audioOutput, &QAudioOutput::volumeChanged,
+        this, &AudioPlayer::volumeChanged);
 
     // Update QML when playback starts or stops.
     connect(player, &QMediaPlayer::playbackStateChanged,
@@ -53,6 +56,11 @@ qint64 AudioPlayer::duration() const
 QString AudioPlayer::songName() const
 {
     return m_songName;
+}
+
+float AudioPlayer::volume() const
+{
+	return audioOutput->volume();
 }
 
 void AudioPlayer::loadFile(const QUrl& fileUrl)
@@ -93,5 +101,10 @@ void AudioPlayer::setPosition(qint64 newPosition)
 void AudioPlayer::setVolume(float volume)
 {
     // Keep volume between 0.0 and 1.0.
-    audioOutput->setVolume(qBound(0.0f, volume, 1.0f));
+    volume = qBound(0.0f, volume, 1.0f);
+
+    if (audioOutput->volume() == volume)
+        return;
+
+    audioOutput->setVolume(volume);
 }

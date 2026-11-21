@@ -2,6 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
 
+
+
+
 ApplicationWindow {
     visible: true
     width: 600
@@ -15,7 +18,7 @@ ApplicationWindow {
         title: "Select a song"
         fileMode: FileDialog.OpenFile
         nameFilters: [
-            "Audio files (*.mp3 *.wav *.ogg *.flac *.m4a)",
+            "Audio files (*.mp3 *.mp4 *.wav *.ogg *.flac *.m4a)",
             "All files (*)"
         ]
 
@@ -44,26 +47,31 @@ ApplicationWindow {
             elide: Text.ElideMiddle
         }
 
-        Button {
-            text: "Choose Song"
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            onClicked: fileDialog.open()
-        }
-
-        Slider {
-            id: progressSlider
-            width: parent.width
-            from: 0
-            to: Math.max(1, audioPlayer.duration)
-            value: audioPlayer.position
-
-            onMoved: audioPlayer.setPosition(value)
-        }
-
         Row {
-            anchors.horizontalCenter: parent.horizontalCenter
+            width: implicitWidth
             spacing: 15
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            Column {
+                width: parent.width * .2
+                spacing: 0
+
+                Slider {
+                    id: volumeSlider
+                    width: parent.width
+                    from: 0
+                    to: Math.max(0, 1)
+                    value: audioPlayer.volume
+
+                    onMoved: audioPlayer.setVolume(value)
+                }
+
+                Text {
+                    text: "Volume"
+                    color: "white"
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
 
             Button {
                 text: audioPlayer.playing ? "Pause" : "Play"
@@ -80,24 +88,53 @@ ApplicationWindow {
                 text: "Stop"
                 onClicked: audioPlayer.stop()
             }
+
+            Button {
+                text: "Choose Song"
+
+                onClicked: fileDialog.open()
+            } 
         }
-
-        Text {
-            text: {
-                let current = Math.floor(audioPlayer.position / 1000)
-                let total = Math.floor(audioPlayer.duration / 1000)
-
-                function formatTime(seconds) {
-                    let minutes = Math.floor(seconds / 60)
-                    let remaining = seconds % 60
-                    return minutes + ":" + String(remaining).padStart(2, "0")
-                }
-
-                return formatTime(current) + " / " + formatTime(total)
-            }
-
-            color: "white"
+        Row {
+            width: parent.width * 0.8
+            spacing: 15
             anchors.horizontalCenter: parent.horizontalCenter
+
+            Column {
+                width: parent.width
+
+                Slider {
+                    id: progressSlider
+                    width: parent.width
+                    from: 0
+                    to: Math.max(1, audioPlayer.duration)
+                    value: audioPlayer.position
+
+                    onMoved: audioPlayer.setPosition(value)
+                }
+                Text {
+                    text: {
+                    
+                        let current = Math.floor(audioPlayer.position / 1000)
+                        let total = Math.floor(audioPlayer.duration / 1000)
+
+                        function formatTime(seconds) {
+                            let minutes = Math.floor(seconds / 60)
+                            let remaining = seconds % 60
+                            return minutes + ":" + String(remaining).padStart(2, "0")
+                        }
+
+                        return formatTime(current) + " / " + formatTime(total)
+               
+                    }
+                    color: "white"
+                }
+            }
+            
+
+            
+
+            
         }
     }
 }

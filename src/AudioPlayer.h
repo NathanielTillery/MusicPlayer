@@ -14,6 +14,7 @@ class AudioPlayer : public QObject
         Q_PROPERTY(qint64 position READ position NOTIFY positionChanged)
         Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
         Q_PROPERTY(QString songName READ songName NOTIFY songNameChanged)
+        Q_PROPERTY(float volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
 public:
     explicit AudioPlayer(QObject* parent = nullptr);
@@ -22,6 +23,7 @@ public:
     qint64 position() const;
     qint64 duration() const;
     QString songName() const;
+    float volume() const;
 
     Q_INVOKABLE void loadFile(const QUrl& fileUrl);
     Q_INVOKABLE void play();
@@ -35,6 +37,7 @@ signals:
     void positionChanged();
     void durationChanged();
     void songNameChanged();
+    void volumeChanged();
 
 private:
     QMediaPlayer* player;
